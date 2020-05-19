@@ -5,9 +5,9 @@
 
     Put all needed configuration in this file.
 ]]
-config = {
+local config = {
+    enabled = false,
     pluginName = "callcommands", -- name your plugin here
-    pluginVersion = "1.0", -- version of your plugin
     pluginAuthor = "SonoranCAD", -- author
     requiresPlugins = {"locations"}, -- required plugins for this plugin to work, separated by commas
 
@@ -18,4 +18,6 @@ config = {
     enablePanic = true
 }
 
---Config.RegisterPluginConfig(config.pluginName, config)
+if config.enabled then
+    Config.RegisterPluginConfig(config.pluginName, config)
+end
