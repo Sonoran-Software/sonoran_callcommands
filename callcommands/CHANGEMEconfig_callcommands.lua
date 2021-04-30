@@ -9,7 +9,6 @@ local config = {
     enabled = false,
     pluginName = "callcommands", -- name your plugin here
     pluginAuthor = "SonoranCAD", -- author
-    requiresPlugins = {"locations"}, -- required plugins for this plugin to work, separated by commas
 
     -- put your configuration options below
     enable911 = true,
