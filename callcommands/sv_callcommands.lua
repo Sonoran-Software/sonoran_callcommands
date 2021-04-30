@@ -109,7 +109,11 @@ if pluginConfig.enabled then
                 }
             }
             debugLog("sending call!")
-            performApiRequest({data}, 'CALL_911', function() end)
+            performApiRequest({data}, 'CALL_911', function(response) 
+                if response:match("EMERGENCY CALL ADDED ID:") then
+                    TriggerEvent("SonoranCAD::callcommands:EmergencyCallAdd", source, response:match("%d+"))
+                end
+            end)
         else
             debugPrint("[SonoranCAD] API sending is disabled. Incoming call ignored.")
         end
