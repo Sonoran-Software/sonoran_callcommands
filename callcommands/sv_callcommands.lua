@@ -59,7 +59,7 @@ CreateThread(function() Config.LoadPlugin("callcommands", function(pluginConfig)
         CreateThread(function()
             for _, call in pairs(pluginConfig.callTypes) do
                 RegisterCommand(call.command, function(source, args, rawCommand)
-                    HandleCivilianCall(call.command, source, args, rawCommand)
+                    HandleCivilianCall(call.command, call, source, args, rawCommand)
                 end)
             end
             if pluginConfig.enablePanic then
