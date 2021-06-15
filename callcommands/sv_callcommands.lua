@@ -58,7 +58,7 @@ CreateThread(function() Config.LoadPlugin("callcommands", function(pluginConfig)
     
         CreateThread(function()
             for _, call in pairs(pluginConfig.callTypes) do
-                RegisterCommand(call.command, call, function(source, args, rawCommand)
+                RegisterCommand(call.command, function(source, args, rawCommand)
                     HandleCivilianCall(call.command, source, args, rawCommand)
                 end)
             end
