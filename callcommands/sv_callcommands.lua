@@ -99,7 +99,7 @@ CreateThread(function() Config.LoadPlugin("callcommands", function(pluginConfig)
                         ['uuid'] = uid,
                         ['silentAlert'] = silenceAlert,
                         ['useCallLocation'] = useCallLocation,
-                        ['callPostal'] = PostalsCache[source],
+                        ['callPostal'] = isPluginLoaded("postals") and PostalsCache[source] or "",
                         ['callLocationx'] = LocationCache[source].position.x,
                         ['callLocationy'] = LocationCache[source].position.y,
                         ['callLocationz'] = LocationCache[source].position.z
