@@ -68,7 +68,7 @@ CreateThread(function() Config.LoadPlugin("callcommands", function(pluginConfig)
                 end, false)
                 -- Client Panic request (to be used by other resources)
                 RegisterNetEvent('SonoranCAD::callcommands:SendPanicApi')
-                AddEventHandler('SonoranCAD::callcommands:SendPanicApi', function(source)
+                AddEventHandler('SonoranCAD::callcommands:SendPanicApi', function()
                     sendPanic(source, true)
                 end)
             end
