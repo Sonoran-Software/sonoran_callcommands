@@ -9,7 +9,7 @@ local config  = {
     enabled = false,
     pluginName = "callcommands", -- name your plugin here
     pluginAuthor = "SonoranCAD", -- author
-    configVerion = "2.0",
+    configVersion = "2.1",
     -- put your configuration options below
     callTypes = {
         { command = "911", isEmergency = true, suggestionText = "Sends a emergency call to your SonoranCAD", descriptionPrefix = "" },
