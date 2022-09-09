@@ -30,7 +30,7 @@ CreateThread(function() Config.LoadPlugin("callcommands", function(pluginConfig)
                     description = typeObj.descriptionPrefix.." "..description
                 end
                 local caller = nil
-                if isPluginLoaded("esxsupport") then
+                if isPluginLoaded("esxsupport") or isPluginLoaded("frameworksupport") then
                     -- Getting the ESX Identity Name
                     GetIdentity(source, function(identity)
                         if identity.name ~= nil then
