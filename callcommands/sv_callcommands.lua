@@ -142,6 +142,7 @@
             RegisterServerEvent('SonoranCAD::callcommands:SendCallApi')
             AddEventHandler('SonoranCAD::callcommands:SendCallApi',
                 function(emergency, caller, location, description, source, silenceAlert, useCallLocation, t)
+					-- Give an unchanged varible to check if call came in as vec3
 					local vec3Call = false
 					local locationVec3 = nil
 					if type(location) == 'vector3' then 
@@ -153,10 +154,10 @@
                     if location == '' then
                         location = LocationCache[source] ~= nil and LocationCache[source].location or 'Unknown'
                     elseif vec3Call then
-						local jsonPostal = exports['nearest-postal']:getPostalServer(location)
-                        postal = jsonPostal.code 
+                        postal = getPostalFromVector3(location) 
 						location = "[" .. postal .."]" .. " Street Unknown" -- Set the location to something other than a print of an xyz
                     end
+
                     -- send an event to be consumed by other resources
                     local uid = uuid()
                     TriggerEvent("SonoranCAD::callcommands:cadIncomingCall", emergency, caller, location,
@@ -167,16 +168,14 @@
                     if useCallLocation == nil then
                         useCallLocation = false
                     end
-                    if isPluginLoaded("postals") and PostalsCache ~= nil and type(location) ~= 'vector3' then
+
+                    if isPluginLoaded("postals") and PostalsCache ~= nil and not vec3Call then
                         postal = PostalsCache[source]
                     end
                     if Config.apiSendEnabled then
 						local callerApiId = nil
-						-- Set the caller api to something so we don't get an unhandled exception
 						if source ~= nil then
 							callerApiId = GetIdentifiers(source)[Config.primaryIdentifier] 
-						else 
-							callerApiId = 0
 						end
                         local data = {
                             ['serverId'] = Config.serverId,
