@@ -142,11 +142,20 @@
             RegisterServerEvent('SonoranCAD::callcommands:SendCallApi')
             AddEventHandler('SonoranCAD::callcommands:SendCallApi',
                 function(emergency, caller, location, description, source, silenceAlert, useCallLocation, t)
+					local vec3Call = false
+					local locationVec3 = nil
+					if type(location) == 'vector3' then 
+						vec3Call = true 
+						locationVec3 = location
+					end
+					
                     local postal = ""
                     if location == '' then
                         location = LocationCache[source] ~= nil and LocationCache[source].location or 'Unknown'
-                    elseif type(location) == 'vector3' then
-                        postal = getPostalFromVector3(location)
+                    elseif vec3Call then
+						local jsonPostal = exports['nearest-postal']:getPostalServer(location)
+                        postal = jsonPostal.code 
+						location = "[" .. postal .."]" .. " Street Unknown" -- Set the location to something other than a print of an xyz
                     end
                     -- send an event to be consumed by other resources
                     local uid = uuid()
@@ -162,6 +171,13 @@
                         postal = PostalsCache[source]
                     end
                     if Config.apiSendEnabled then
+						local callerApiId = nil
+						-- Set the caller api to something so we don't get an unhandled exception
+						if source ~= nil then
+							callerApiId = GetIdentifiers(source)[Config.primaryIdentifier] 
+						else 
+							callerApiId = 0
+						end
                         local data = {
                             ['serverId'] = Config.serverId,
                             ['isEmergency'] = emergency,
@@ -170,14 +186,19 @@
                             ['description'] = description,
                             ['metaData'] = {
                                 ['callerPlayerId'] = source,
-                                ['callerApiId'] = GetIdentifiers(source)[Config.primaryIdentifier],
+                                ['callerApiId'] = callerApiId,
                                 ['uuid'] = uid,
                                 ['silentAlert'] = silenceAlert,
                                 ['useCallLocation'] = useCallLocation,
-                                ['postal'] = postal
+                                ['postal'] = postal,
+								['callPostal'] = postal,
                             }
                         }
-                        if LocationCache[source] ~= nil then
+						if vec3Call then 
+						    data['metaData']['x'] = locationVec3.x
+                            data['metaData']['y'] = locationVec3.y
+                            data['metaData']['z'] = locationVec3.z
+                        elseif LocationCache[source] ~= nil then
                             data['metaData']['x'] = LocationCache[source].coordinates.x
                             data['metaData']['y'] = LocationCache[source].coordinates.y
                             data['metaData']['z'] = LocationCache[source].coordinates.z
@@ -271,4 +292,3 @@
         end
     end)
 end)
-
